@@ -5,7 +5,6 @@ import {
   addExpense,
   listExpenses,
   getExpense,
-  updateExpense,
   deleteExpenses,
   getTotalExpenses,
 } from '../controllers/expenseController.js';
@@ -25,9 +24,6 @@ router.get('/', listExpenses);
 
 // Get single expense
 router.get('/:id', getExpense);
-
-// Update expense
-router.put('/:id', updateExpense);
 
 // Delete single or multiple expenses
 router.delete('/', deleteExpenses);
