@@ -1,5 +1,5 @@
 import express from 'express';
-import { protect, requireAdmin } from '../middlewares/authMiddleware.js';
+import { protect } from '../middlewares/authMiddleware.js';
 
 import {
   createCampaign,
@@ -29,9 +29,9 @@ router.get('/:id', getCampaign);
 // PUT /api/campaigns/:id
 router.put('/:id', updateCampaign);
 
-// Bulk delete campaigns (Admin only)
+// Bulk delete campaigns
 // DELETE /api/campaigns
 // body: { ids: ["...", "...", "..."] }
-router.delete('/', requireAdmin, deleteCampaigns);
+router.delete('/', deleteCampaigns);
 
 export default router;

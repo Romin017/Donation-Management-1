@@ -1,5 +1,5 @@
 import express from 'express';
-import { protect, requireAdmin } from '../middlewares/authMiddleware.js';
+import { protect } from '../middlewares/authMiddleware.js';
 
 import {
   addDonor,
@@ -17,12 +17,11 @@ router.post('/register-and-pay', registerAndPayOnline);
 
 router.use(protect);
 
-router.post('/', requireAdmin, addDonor);
-router.get('/', requireAdmin, listDonors);
-router.get('/:id', requireAdmin, getDonor);
-router.put('/:id', requireAdmin, updateDonor);
+router.post('/', addDonor);
+router.get('/', listDonors);
+router.get('/:id', getDonor);
+router.put('/:id', updateDonor);
 
-// Delete donor (Admin only)
-router.delete('/:id', requireAdmin, deleteDonor);
+router.delete('/:id', deleteDonor);
 
 export default router;

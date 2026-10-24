@@ -8,6 +8,7 @@ import { Badge } from '../components/ui/Badge'
 import { ConfirmDialog } from '../components/ui/Modal'
 import { FeedbackToast } from '../components/ui/FeedbackToast'
 import { UserFormModal } from '../components/users/UserFormModal'
+import { useAuth } from '../context/AuthContext'
 import { initials } from '../lib/utils'
 import {
   getUsersService,
@@ -20,6 +21,8 @@ const roleTone = { Admin: 'Cheque', Staff: 'Cash' }
 const statusTone = { Active: 'Cash', Inactive: 'Cheque', Pending: 'Online' }
 
 export default function Users() {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'Admin'
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -104,11 +107,11 @@ export default function Users() {
       <Topbar
         title="Users"
         subtitle={`${users.length} user${users.length === 1 ? '' : 's'}`}
-        actions={
+        actions={isAdmin ? (
           <Button onClick={openAdd}>
             <Plus className="h-4 w-4" /> Add user
           </Button>
-        }
+        ) : null}
       />
 
       <div className="p-6">
@@ -141,7 +144,7 @@ export default function Users() {
                     <th className="px-5 py-3 font-medium">Email</th>
                     <th className="px-5 py-3 font-medium">Role</th>
                     <th className="px-5 py-3 font-medium">Status</th>
-                    <th className="px-5 py-3 font-medium text-right">Actions</th>
+                    {isAdmin && <th className="px-5 py-3 font-medium text-right">Actions</th>}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -162,22 +165,24 @@ export default function Users() {
                       <td className="px-5 py-3">
                         <Badge tone={statusTone[u.status]}>{u.status}</Badge>
                       </td>
-                      <td className="px-5 py-3">
-                        <div className="flex justify-end gap-1">
-                          <button
-                            onClick={() => openEdit(u)}
-                            className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => setDeleteTarget(u)}
-                            className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
+                      {isAdmin && (
+                        <td className="px-5 py-3">
+                          <div className="flex justify-end gap-1">
+                            <button
+                              onClick={() => openEdit(u)}
+                              className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => setDeleteTarget(u)}
+                              className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   ))}
                   {filtered.length === 0 && (

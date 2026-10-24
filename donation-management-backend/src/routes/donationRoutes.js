@@ -1,5 +1,5 @@
 import express from 'express';
-import { protect, requireAdmin, requireDonor } from '../middlewares/authMiddleware.js';
+import { protect, requireDonor } from '../middlewares/authMiddleware.js';
 
 import {
   addDonation,
@@ -30,8 +30,8 @@ router.get('/:id', getDonation);
 // Update donation
 router.put('/:id', updateDonation);
 
-// Bulk delete donations (Admin only)
+// Bulk delete donations
 // body: { ids: ["...", "...", "..."] }
-router.delete('/', requireAdmin, deleteDonations);
+router.delete('/', deleteDonations);
 
 export default router;

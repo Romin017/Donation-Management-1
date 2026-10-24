@@ -23,13 +23,6 @@ function RequireBackOffice({ children }) {
   return children
 }
 
-function RequireAdmin({ children }) {
-  const { user } = useAuth()
-  if (!user) return <Navigate to="/login" replace />
-  if (user.role !== 'Admin') return <Navigate to="/donors" replace />
-  return children
-}
-
 function RequireDonor({ children }) {
   const { user } = useAuth()
   if (!user) return <Navigate to="/login" replace />
@@ -88,22 +81,8 @@ export default function App() {
         <Route path="/donors" element={<Donors />} />
         <Route path="/campaigns" element={<Campaigns />} />
         <Route path="/donations" element={<Donations />} />
-        <Route
-          path="/expenses"
-          element={
-            <RequireAdmin>
-              <Expenses />
-            </RequireAdmin>
-          }
-        />
-        <Route
-          path="/users"
-          element={
-            <RequireAdmin>
-              <Users />
-            </RequireAdmin>
-          }
-        />
+        <Route path="/expenses" element={<Expenses />} />
+        <Route path="/users" element={<Users />} />
         <Route
           path="/user-profile"
           element={

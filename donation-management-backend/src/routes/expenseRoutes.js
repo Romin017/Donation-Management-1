@@ -1,5 +1,5 @@
 import express from 'express';
-import { protect, requireAdmin } from '../middlewares/authMiddleware.js';
+import { protect } from '../middlewares/authMiddleware.js';
 
 import {
   addExpense,
@@ -12,7 +12,7 @@ import {
 
 const router = express.Router();
 
-router.use(protect, requireAdmin);
+router.use(protect);
 
 // Create expense
 router.post('/', addExpense);

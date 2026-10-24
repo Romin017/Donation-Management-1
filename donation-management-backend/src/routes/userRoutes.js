@@ -4,11 +4,11 @@ import { createUser, getUsers, updateUser, deleteUser } from '../controllers/use
 
 const router = express.Router();
 
-router.use(protect, requireAdmin);
+router.use(protect);
 
 router.get('/', getUsers);
-router.post('/', createUser);
-router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
+router.post('/', requireAdmin, createUser);
+router.put('/:id', requireAdmin, updateUser);
+router.delete('/:id', requireAdmin, deleteUser);
 
 export default router;
