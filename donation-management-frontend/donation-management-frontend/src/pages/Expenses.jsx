@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { Topbar } from '../components/layout/Topbar'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
@@ -13,7 +13,6 @@ import {
   getCampaignsService,
   getExpensesService,
   createExpenseService,
-  updateExpenseService,
   deleteExpensesService,
 } from '../api/apiService'
 
@@ -29,7 +28,6 @@ export default function Expenses() {
   const [query, setQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('All')
   const [formOpen, setFormOpen] = useState(false)
-  const [editing, setEditing] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [submitting, setSubmitting] = useState(false)
 
@@ -78,28 +76,16 @@ export default function Expenses() {
   const total = filtered.reduce((s, e) => s + Number(e.amount), 0)
 
   function openAdd() {
-    setEditing(null)
-    setFormOpen(true)
-  }
-  function openEdit(expense) {
-    setEditing(expense)
     setFormOpen(true)
   }
   
   async function handleSubmit(data) {
     setSubmitting(true)
     try {
-      if (editing) {
-        const { data: res } = await updateExpenseService(editing._id, data)
-        setExpenses((prev) => prev.map((e) => (e._id === editing._id ? res.data : e)))
-        setFeedback({ type: 'success', message: res.message || 'Expense updated successfully.' })
-      } else {
-        const { data: res } = await createExpenseService(data)
-        setExpenses((prev) => [res.data, ...prev])
-        setFeedback({ type: 'success', message: res.message || 'Expense created successfully.' })
-      }
+      const { data: res } = await createExpenseService(data)
+      setExpenses((prev) => [res.data, ...prev])
+      setFeedback({ type: 'success', message: res.message || 'Expense created successfully.' })
       setFormOpen(false)
-      setEditing(null)
     } catch (err) {
       setFeedback({ type: 'error', message: err.response?.data?.message || 'Failed to save expense.' })
       setError(err.response?.data?.message || 'Failed to save expense.')
@@ -186,12 +172,6 @@ export default function Expenses() {
                       <td className="px-5 py-3">
                         <div className="flex justify-end gap-1">
                           <button
-                            onClick={() => openEdit(e)}
-                            className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </button>
-                          <button
                             onClick={() => setDeleteTarget(e)}
                             className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                           >
@@ -219,7 +199,6 @@ export default function Expenses() {
         open={formOpen}
         onClose={() => setFormOpen(false)}
         onSubmit={handleSubmit}
-        expense={editing}
         campaigns={campaigns}
         submitting={submitting}
       />

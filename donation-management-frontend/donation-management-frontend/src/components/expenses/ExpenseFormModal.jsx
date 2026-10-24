@@ -16,27 +16,15 @@ const empty = {
 
 const categories = ['Operations', 'Logistics', 'Salaries', 'Utilities', 'Supplies', 'Marketing', 'Other']
 
-export function ExpenseFormModal({ open, onClose, onSubmit, expense, campaigns }) {
+export function ExpenseFormModal({ open, onClose, onSubmit, campaigns }) {
   const [form, setForm] = useState(empty)
   const [errors, setErrors] = useState({})
 
   useEffect(() => {
-    setForm(
-      expense
-        ? {
-            category: expense.category,
-            paidTo: expense.paidTo,
-            billNo: expense.billNo || '',
-            amount: expense.amount,
-            date: expense.date ? expense.date.slice(0, 10) : '',
-            paymentMode: expense.paymentMode,
-            campaignId: expense.campaignId?._id || expense.campaignId || '',
-            notes: expense.notes || '',
-          }
-        : empty,
-    )
+    if (!open) return
+    setForm({ ...empty, date: new Date().toISOString().slice(0, 10) })
     setErrors({})
-  }, [expense, open])
+  }, [open])
 
   function validate() {
     const errs = {}
@@ -62,8 +50,8 @@ export function ExpenseFormModal({ open, onClose, onSubmit, expense, campaigns }
     <Modal
       open={open}
       onClose={onClose}
-      title={expense ? 'Edit expense' : 'Add expense'}
-      description={expense ? 'Update this expense record.' : 'Log a new organizational expense.'}
+      title="Add expense"
+      description="Log a new organizational expense."
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
@@ -160,7 +148,7 @@ export function ExpenseFormModal({ open, onClose, onSubmit, expense, campaigns }
           <Button type="button" variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit">{expense ? 'Save changes' : 'Add expense'}</Button>
+          <Button type="submit">Add expense</Button>
         </div>
       </form>
     </Modal>
